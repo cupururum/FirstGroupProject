@@ -1,3 +1,4 @@
-body {
-  background-color: rgb(207,227,230);
+#map {
+  width: 60%;
+  height: 400px;
 }

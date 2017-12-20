@@ -6,6 +6,7 @@
 	<title>MIDDLE OF THE ROAD</title>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="assets/style/style.css">
 </head>
 
 <body>
@@ -32,8 +33,6 @@
  -->
 
 	<!-- IS THIS NECESSARY? OR THE RIGHT PLACE TO PUT THIS? -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script type="text/javascript"></script>
 
 	<!-- Container div to adjust margins and generally annoy the user -->
 	<div class="container">
@@ -88,7 +87,7 @@
       </div>
 
 	  <!-- GOOGLE MAPS placeholder -->
-	  <div class="col-sm-9">GOOGLE MAPS placeholder</div>
+	  <div class="col-sm-9" id="map">GOOGLE MAPS placeholder</div>
 
     </div>
 
@@ -147,7 +146,23 @@
     </div>
 
   </div>
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript"></script>
+	<script>
+      function initMap() {
+        var uluru = {lat: -25.363, lng: 131.044};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+	</script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMDpP3xD9m3m_qX_SgKnssTCDNGalVl7o&callback=initMap"
+	type="text/javascript"></script>
 </body>
 
 </html>
