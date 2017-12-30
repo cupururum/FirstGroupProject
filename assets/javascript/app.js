@@ -28,7 +28,45 @@ function initMap() {
         var arrayOfLng =[];
         var arrayOfLatLng = [];
 
+        function getCoordinatesOfEachPointOfTheRoute() {
+          overviewPath.forEach(function(coordinate){
+              arrayOfLat.push(coordinate.lat())
+              arrayOfLng.push(coordinate.lng())
+          })
+          console.log("arrayOfLat", arrayOfLat);
+          console.log("arrayOfLng", arrayOfLng);
 
+          for (i = 0; i < arrayOfLat.length & i < arrayOfLng.length ; i++ ) {
+            var latLng = arrayOfLng[i] + "+" + arrayOfLat[i]
+            arrayOfLatLng.push(latLng)
+          }
+          console.log("arrayOfLatLng: ", arrayOfLatLng)
+
+          var url = "https://developer.nrel.gov/api/alt-fuel-stations/v1/nearby-route.json?api_key=xHIvbkK7W6G0pLIRU4BywSWNm0z3HINHnwJw92Rg&distance=2&route=LINESTRING(" + arrayOfLatLng + ")"
+
+          $.getJSON(url, function(response){
+            console.log(response);
+            var locations = [];
+            response.fuel_stations.forEach(function(station){
+              var locationsFormat = {
+                lat: undefined,
+                lng: undefined
+              }
+              locationsFormat.lat = station.latitude;
+              locationsFormat.lng = station.longitude;
+              locations.push(locationsFormat)
+            });
+            console.log("locationsFuleStations: ", locations)
+
+            locations.forEach(function(location){
+              var marker = new google.maps.Marker({
+                  position: location,
+                  map: map
+                });
+            })
+
+          });
+        }
         getCoordinatesOfEachPointOfTheRoute()
 
 
@@ -41,6 +79,7 @@ function initMap() {
         });
 
        var flightPathGetPath = flightPath.getPath();
+
        console.log("flightPathGetPath: ", flightPathGetPath)
        var computePath = google.maps.geometry.spherical.computeLength(flightPathGetPath)
        var halfOfComputePath = computePath / 2;
