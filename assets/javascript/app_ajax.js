@@ -1,5 +1,4 @@
-// var url = "https://developer.nrel.gov/api/alt-fuel-stations/v1/nearby-route.json?api_key=xHIvbkK7W6G0pLIRU4BywSWNm0z3HINHnwJw92Rg&distance=2&route=LINESTRING()"
-//
+// var url = "https://developer.nrel.gov/api/alt-fuel-stations/v1/nearby-route.json?api_key=xHIvbkK7W6G0pLIRU4BywSWNm0z3HINHnwJw92Rg&distance=2&route=LINESTRING()
 // $.getJSON(url, function(response){
 //   console.log(response);
 // });
@@ -35,52 +34,125 @@
 //     console.log(data);
 // });
 // console.log("overviewPolyline:  ", overviewPath)
-function getCoordinatesOfEachPointOfTheRoute() {
-  overviewPath.forEach(function(coordinate){
-      arrayOfLat.push(coordinate.lat())
-      arrayOfLng.push(coordinate.lng())
+function getVegeterianPlaces(lat, log, geocoder, map) {
+  var veggyURL = "https://www.vegguide.org/search/by-lat-long/" + lat + "," + log + "?unit=mile;distance=5";
+  $.getJSON(veggyURL, function(response){
+     console.log("veg API response: ", response)
+     var entries = response.entries;
+     entries.forEach(function(entry){
+       var vegEntryAdress = entry.address1;
+       var vegEntryCity = entry.city;
+       var vegEntryState = entry.region;
+       console.log("veg entry adress", vegEntryAdress, vegEntryCity)
+       var vegFullAdress = vegEntryAdress + vegEntryCity //+ vegEntryState
+
+       if (vegEntryAdress !== undefined) {
+         codeAddress(vegFullAdress, geocoder, map)
+       } else {
+         //ignore!
+       }
+
+
+     })
   })
-  console.log("arrayOfLat", arrayOfLat);
-  console.log("arrayOfLng", arrayOfLng);
+} //getVegeterianPlaces()
 
-  for (i = 0; i < arrayOfLat.length & i < arrayOfLng.length ; i++ ) {
-    var latLng = arrayOfLng[i] + "+" + arrayOfLat[i]
-    arrayOfLatLng.push(latLng)
-  }
-  console.log("arrayOfLatLng: ", arrayOfLatLng)
+// all of the different variables for the map and the places
 
-  var url = "https://developer.nrel.gov/api/alt-fuel-stations/v1/nearby-route.json?api_key=xHIvbkK7W6G0pLIRU4BywSWNm0z3HINHnwJw92Rg&distance=2&route=LINESTRING(" + arrayOfLatLng + ")"
+// function findHotelsAroundMiddlePoint(middle){
+//   var map;
+//   var infoWindow;
+//
+//   var request;
+//   var service;
+//   // markers are the icons that denote the places
+//   var markers = [];
+//
+//   function initialize() {
+//       var center = new google.maps.LatLng(37.422, -122.084058);
+//       //place the middle point in the center variable within the initialize function
+//       map = new google.maps.Map(document.getElementById('map'), {
+//           center: middle,
+//           zoom: 13
+//       });
+//
+//       request = {
+//           location: center,
+//           radius: 10000,
+//           type: ['hotel']
+//       };
+//       infoWindow = new google.maps.InfoWindow();
+//
+//       service = new google.maps.places.PlacesService(map);
+//
+//       service.nearbySearch(request, callback);
+//
+//       google.maps.event.addListener(map, 'rightclick', function(event) {
+//           map.setCenter(event.latLng)
+//           clearResults(markers)
+//
+//           var request = {
+//               location: event.latLng,
+//               radius: 10000,
+//               type: ['hotel']
+//           };
+//           service.nearbySearch(request, callback);
+//       })
+//
+//   }
+//
+//   function callback(results, status) {
+//       if(status == google.maps.places.PlacesServiceStatus.OK){
+//           for (var i = 0; i < results.length; i++){
+//               markers.push(createMarker(results[i]));
+//           }
+//       }
+//   }
+//
+//   function createMarker(place) {
+//       var photos = place.photos;
+//       if (!photos) {
+//           return;
+//       }
+//       var placeLoc = place.geometry.location;
+//       var marker = new google.maps.Marker({
+//           map: map,
+//           position: place.geometry.location,
+//           title: place.name,
+//           rating: place.rating
+//
+//           // icon: photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100})
+//       });
+//
+//       google.maps.event.addListener(marker, 'click', function(){
+//
+//           infoWindow.setContent(place.name, place.rating);
+//           infoWindow.open(map, this);
+//       });
+//       return marker;
+//
+//   }
+//
+//   function clearResults(markers) {
+//       for (var m in markers) {
+//           markers[m].setMap(null)
+//       }
+//       markers = []
+//       console.log(markers);
+//   }
+//
 
-  $.getJSON(url, function(response){
-    console.log(response);
-    var locations = [];
-    response.fuel_stations.forEach(function(station){
-      var locationsFormat = {
-        lat: undefined,
-        lng: undefined
-      }
-      locationsFormat.lat = station.latitude;
-      locationsFormat.lng = station.longitude;
-      locations.push(locationsFormat)
-    });
-    console.log("locationsFuleStations: ", locations)
-
-    locations.forEach(function(location){
-      var marker = new google.maps.Marker({
-          position: location,
-          map: map
-        });
-    })
-
-  });
-}
+//   google.maps.event.addDomListener(window, 'load', initialize);
+//
+//
+// }//end findHotelsAroundMiddlePoint()
 
 
 function getWeatheReport(lat, log){
   var APIKey = "2fed8f4901a44c1fc8836915c086c9e8";
 
   // Here we are building the URL we need to query the database
-  var queryURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + log + "&appid=" + APIKey;
+  var queryURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + log + "&units=imperial&appid=" + APIKey;
 
   // We then created an AJAX call
   $.ajax({
@@ -88,6 +160,20 @@ function getWeatheReport(lat, log){
     method: "GET"
   }).done(function(response) {
      console.log(response)
+
+     var iconCode = response.weather[0].icon;
+     var temperature = Math.round(response.main.temp);
+     var name = response.name;
+
+     $("#weather-icon").html('<img src="http://openweathermap.org/img/w/' + iconCode + '.png">');
+     $("#city-temperature-h3").text(temperature + "\xB0" + "F");
+     $("#city-name-h3").text(name);
+    // Create CODE HERE to Log the queryURL
+    // Create CODE HERE to log the resulting object
+    // Create CODE HERE to transfer content to HTML
+    // Create CODE HERE to calculate the temperature (converted from Kelvin)
+    // Hint: To convert from Kelvin to Fahrenheit: F = (K - 273.15) * 1.80 + 32
+    // Create CODE HERE to dump the temperature content into HTML
 
   });
 }

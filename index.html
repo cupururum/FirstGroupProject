@@ -11,23 +11,6 @@
 
 <body>
 
-<!--    DIV class="form-group"
-		NAME FIELD
-		id="name-entry"
-		CURRENT LOCATION (city, state)
-		id="current-loc"
-		BIRTHDATE (mm-dd-yyyy)
-		id="birth-date"
-		BIRTH LOCATION (city, state)
-		id="birth-loc"
-		Search Button
-		id="run-search"
-		Clear Results Button
-        id="clear-all"
- -->
-
-	<!-- IS THIS NECESSARY? OR THE RIGHT PLACE TO PUT THIS? -->
-
 	<!-- Container div to adjust margins and generally annoy the user -->
 	<div class="container">
 
@@ -38,98 +21,95 @@
 
 	<!-- LOVER #1 entry form -->
     <div class="row">
-
-      <div class="col-sm-3">
         <br>
         <!-- First panel is for handling the search parameters -->
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i>LOVER #1</strong></h3>
+            <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i>Find middle point on the route</strong></h3>
           </div>
           <div class="panel-body">
 
             <!-- Here we create an HTML Form for handling the inputs-->
             <form role="form">
-
               <!-- Here we create the text box for capturing the search term-->
-              <div class="form-group">
-                <label for="name">NAME</label>
-                <input type="text" class="form-control" id="name-entry">
-              </div>
+		            <div class="container" id="containerForm">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group inputs">
+				                <label for="current-loc">Origin</label>
+				                <input type="text" class="form-control" id="origin">
+				              </div>
 
-              <div class="form-group">
-                <label for="current-loc">CURRENT LOCATION (city, state)</label>
-                <input type="text" class="form-control" id="current-loc">
-              </div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group inputs">
+				                <label for="current-loc">Destination</label>
+				                <input type="text" class="form-control" id="destination">
+				              </div>
+										</div>
+									</div>
 
-              <div class="form-group">
-                <label for="birth-date">BIRTHDATE (mm-dd-yyyy)</label>
-                <input type="text" class="form-control" id="birth-date">
-              </div>
-
-              <div class="form-group">
-                <label for="birth-loc">BIRTH LOCATION (city, state)</label>
-                <input type="text" class="form-control" id="birth-loc">
-              </div>
-
-              <button type="submit" class="btn btn-default" id="run-search"><i class="fa fa-search"></i> Search</button>
-              <button type="button" class="btn btn-default" id="clear-all"><i class="fa fa-trash"></i> Clear Results</button>
-
+									<div class="row">
+										<div class="col-md-12">
+											<button type="submit" class="btn btn-default" id="run-search"><i class="fa fa-search"></i> Search</button>
+											<button type="button" class="btn btn-default" id="clear-all"><i class="fa fa-trash"></i> Clear Results</button>
+											<button type="button" class="btn btn-default" id="show-elec"><i class="fa fa-search"></i> Show all Electric Charging Stations on the Route</button>
+											<button type="button" class="btn btn-default" id="show-restaurants"><i class="fa fa-trash"></i> Show Restaurants near Middle Point</button>
+										</div>
+									</div>
+								</div>
             </form>
+
           </div>
         </div>
-      </div>
+    </div>
 
 	  <!-- GOOGLE MAPS placeholder -->
-	  <div class="col-sm-9" id="map">GOOGLE MAPS placeholder</div>
+		<div class="row">
+			  <div class="col-sm-9" id="map">GOOGLE MAPS placeholder
 
-    </div>
+				</div>
+		</div>
+
+    <br>
+		<div class="row">
+			  <div class="col-md-5" >
+
+					<div class="panel panel-primary" id="panel-weather">
+	          <div class="panel-heading" id="weather_panel_heading">
+	            <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i>Current Weather In The Middle Point</strong></h3>
+	          </div>
+	          <div class="panel-body" id="weather">
+							<div id="city-temperature">
+								<h3 id="city-temperature-h3">&#x2109;</h3>
+							</div>
+							<div id="weather-icon">
+
+							</div>
+							<div id="city-name">
+								<h3 id="city-name-h3"></h3>
+							</div>
+
+						</div>
+				  </div>
+		   </div>
+
+			 <div class="col-md-3 info-about-route">
+				 <div id="adress-mid-point">
+				 </div>
+				 <div id="overallDistance">
+				 </div>
+				 <div id="distanceInMilesUntillMiddlePoint">
+				 </div>
+			 </div>
+
+			 <div class="col-md-4">
+				 <div id="adress-mid-point">
+				 </div>
+			 </div>
+	  </div>
 
 
-	<!-- LOVER #2 entry form -->
-    <div class="row">
-      <div class="col-sm-3">
-
-        <!-- First panel is for handling the search parameters -->
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i>LOVER #2</strong></h3>
-          </div>
-          <div class="panel-body">
-
-            <!-- Here we create an HTML Form for handling the inputs-->
-            <form role="form">
-
-              <!-- Here we create the text box for capturing the search term-->
-              <div class="form-group">
-                <label for="name">NAME</label>
-                <input type="text" class="form-control" id="name-entry">
-              </div>
-
-              <div class="form-group">
-                <label for="current-loc">CURRENT LOCATION (city, state)</label>
-                <input type="text" class="form-control" id="current-loc">
-              </div>
-
-              <div class="form-group">
-                <label for="birth-date">BIRTHDATE (mm-dd-yyyy)</label>
-                <input type="text" class="form-control" id="birth-date">
-              </div>
-
-              <div class="form-group">
-                <label for="birth-loc">BIRTH LOCATION (city, state)</label>
-                <input type="text" class="form-control" id="birth-loc">
-              </div>
-
-              <button type="submit" class="btn btn-default" id="run-search"><i class="fa fa-search"></i> Search</button>
-              <button type="button" class="btn btn-default" id="clear-all"><i class="fa fa-trash"></i> Clear Results</button>
-
-            </form>
-          </div>
-        </div>
-      </div>
-
-    </div>
 
     <!-- good ol' footer -->
     <div class="row">
@@ -139,7 +119,8 @@
       </div>
     </div>
 
-  </div>
+</div> <!-- closing main container -->
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="assets/javascript/app_ajax.js"></script>
 	<script src="assets/javascript/app.js"></script>
