@@ -14,7 +14,7 @@ function initMap() {
   function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     directionsService.route({
       origin: "san francisco, ca",
-      destination: "mammoth lakes, ca",
+      destination: "new york, ny",
       travelMode: 'DRIVING'
     }, function(response, status) {
       if (status === 'OK') {
@@ -23,44 +23,80 @@ function initMap() {
         var overviewPolyline = response.routes[0].overview_polyline;
         console.log("overviewPath:  ", overviewPath)
         console.log("overviewPolyline:  ", overviewPolyline)
-        // $.ajax({
-        //     url: 'https://developers.zomato.com/api/v2.1/geocode?lat=38.78318&lon=-120.22406',
-        //
-        //     headers: {
-        //         'user-key': '8376a5feabb71417a346299da63ae0b3'
-        //     }
-        //
-        //
-        // }).done(function(data){
-        //     console.log(data);
-        // });
-        //console.log("overviewPolyline:  ", overviewPath)
+
+        var arrayOfLat =[];
+        var arrayOfLng =[];
+        var arrayOfLatLng = [];
+
+        function getCoordinatesOfEachPointOfTheRoute() {
+          overviewPath.forEach(function(coordinate){
+              arrayOfLat.push(coordinate.lat())
+              arrayOfLng.push(coordinate.lng())
+          })
+          console.log("arrayOfLat", arrayOfLat);
+          console.log("arrayOfLng", arrayOfLng);
+
+          for (i = 0; i < arrayOfLat.length & i < arrayOfLng.length ; i++ ) {
+            var latLng = arrayOfLng[i] + "+" + arrayOfLat[i]
+            arrayOfLatLng.push(latLng)
+          }
+          console.log("arrayOfLatLng: ", arrayOfLatLng)
+
+          var url = "https://developer.nrel.gov/api/alt-fuel-stations/v1/nearby-route.json?api_key=xHIvbkK7W6G0pLIRU4BywSWNm0z3HINHnwJw92Rg&distance=2&route=LINESTRING(" + arrayOfLatLng + ")"
+
+          $.getJSON(url, function(response){
+            console.log(response);
+            var locations = [];
+            response.fuel_stations.forEach(function(station){
+              var locationsFormat = {
+                lat: undefined,
+                lng: undefined
+              }
+              locationsFormat.lat = station.latitude;
+              locationsFormat.lng = station.longitude;
+              locations.push(locationsFormat)
+            });
+            console.log("locationsFuleStations: ", locations)
+
+            locations.forEach(function(location){
+              var marker = new google.maps.Marker({
+                  position: location,
+                  map: map
+                });
+            })
+
+          });
+        }
+        getCoordinatesOfEachPointOfTheRoute()
+
+
         var flightPath = new google.maps.Polyline({
           path: overviewPath,
-          // geodesic: true,
+          geodesic: true,
           strokeColor: '#FF0000',
           strokeOpacity: 0.0,
-          // strokeWeight: 2
+          strokeWeight: 2
         });
 
        var flightPathGetPath = flightPath.getPath();
 
+       console.log("flightPathGetPath: ", flightPathGetPath)
        var computePath = google.maps.geometry.spherical.computeLength(flightPathGetPath)
        var halfOfComputePath = computePath / 2;
        console.log("computePath: ", computePath)
        console.log("halfOfComputePath: ", halfOfComputePath)
 
-       var arrayfindHalfDistance = [];
+       var arrayFindHalfDistance = [];
        var indexOfMiddlePoint = 0;
 
        for (var i = 0; i < overviewPath.length; i++){
-          arrayfindHalfDistance.push(overviewPath[i])
+          arrayFindHalfDistance.push(overviewPath[i])
           flightPath = new google.maps.Polyline({
-            path: arrayfindHalfDistance,
-            // geodesic: true,
+            path: arrayFindHalfDistance,
+            geodesic: true,
             strokeColor: '#FF0000',
             strokeOpacity: 1.0,
-            // strokeWeight: 2
+            strokeWeight: 2
           });
 
           flightPathGetPath = flightPath.getPath();
@@ -69,16 +105,16 @@ function initMap() {
           if (computeHalfPath >= halfOfComputePath) {
 
             flightPath = new google.maps.Polyline({
-              path: arrayfindHalfDistance,
-              // geodesic: true,
+              path: arrayFindHalfDistance,
+              geodesic: true,
               strokeColor: '#FF0000',
               strokeOpacity: 1.0,
-              // strokeWeight: 2
+              strokeWeight: 2
             });
             flightPath.setMap(map);
 
-            indexOfMiddlePoint = arrayfindHalfDistance[i];
-            pinMiddlePoint(arrayfindHalfDistance[i])
+            indexOfMiddlePoint = arrayFindHalfDistance[i];
+            pinMiddlePoint(arrayFindHalfDistance[i])
             console.log("indexOfMiddlePoint: ", indexOfMiddlePoint)
             return
 
@@ -101,7 +137,8 @@ function initMap() {
                 map.setZoom(8);
                 var marker = new google.maps.Marker({
                   position: middle,
-                  map: map
+                  map: map,
+                  title: 'Hello Middle Point!'
                 });
                 var positionLat = marker.getPosition().lat()
                 var positionLng = marker.getPosition().lng()
@@ -109,13 +146,13 @@ function initMap() {
                 coordinatesMiddle.push(positionLat)
                 coordinatesMiddle.push(positionLng)
                 console.log("coordinatesMiddle: ", coordinatesMiddle)
-                // console.log("positionLat: ", positionLat)
-                // console.log("positionLng: ", positionLng)
+
                 var addressMiddle = results[0].formatted_address;
                 var placeId = results[0].place_id;
                 console.log("placeId: ", placeId);
                 console.log(results[0].formatted_address);
                 codeAddress(addressMiddle)
+                getWeatheReport(positionLat, positionLng)
               } else {
                 window.alert('No results found');
               }
@@ -136,7 +173,9 @@ function initMap() {
             });
           }// end of codeAddress
        }
+
         flightPath.setMap(map);
+
       } else {
         window.alert('Directions request failed due to ' + status);
       }
