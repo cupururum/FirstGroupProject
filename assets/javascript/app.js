@@ -13,12 +13,13 @@ function initMap() {
 
   function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     directionsService.route({
-      origin: "san francisco, ca",
-      destination: "new york, ny",
+      origin: "newport, or",
+      destination: "boston, ma",
       travelMode: 'DRIVING'
     }, function(response, status) {
       if (status === 'OK') {
         directionsDisplay.setDirections(response);
+
         var overviewPath = response.routes[0].overview_path;
         var overviewPolyline = response.routes[0].overview_polyline;
         console.log("overviewPath:  ", overviewPath)
@@ -36,15 +37,23 @@ function initMap() {
           console.log("arrayOfLat", arrayOfLat);
           console.log("arrayOfLng", arrayOfLng);
 
+
           for (i = 0; i < arrayOfLat.length & i < arrayOfLng.length ; i++ ) {
+            arrayOfLat[i] = Math.round10(arrayOfLat[i], -1)
+            arrayOfLng[i] = Math.round10(arrayOfLng[i], -1)
             var latLng = arrayOfLng[i] + "+" + arrayOfLat[i]
             arrayOfLatLng.push(latLng)
           }
           console.log("arrayOfLatLng: ", arrayOfLatLng)
 
-          var url = "https://developer.nrel.gov/api/alt-fuel-stations/v1/nearby-route.json?api_key=xHIvbkK7W6G0pLIRU4BywSWNm0z3HINHnwJw92Rg&distance=2&route=LINESTRING(" + arrayOfLatLng + ")"
+          var url = "https://developer.nrel.gov/api/alt-fuel-stations/v1/nearby-route.json?api_key=xHIvbkK7W6G0pLIRU4BywSWNm0z3HINHnwJw92Rg&fuel_type=ELEC&distance=0&route=LINESTRING(" + arrayOfLatLng + ")"
 
-          $.getJSON(url, function(response){
+          $.ajax({
+            url: url,
+            method: "POST",
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+          }).done(function(response){
             console.log(response);
             var locations = [];
             response.fuel_stations.forEach(function(station){
@@ -125,11 +134,11 @@ function initMap() {
        console.log("indexOfMiddlePoint: ", indexOfMiddlePoint)
 
        function pinMiddlePoint(middle) {
-
          var marker = new google.maps.Marker({
           position: middle,
           map: map
         });
+
          geocoder.geocode({'location': middle}, function(results, status) {
            console.log("geocoder results with middle: ", results)
             if (status === 'OK') {
@@ -159,7 +168,8 @@ function initMap() {
             } else {
               window.alert('Geocoder failed due to: ' + status);
             }
-          });// end of pinMiddlePoint
+          });
+        }// end of pinMiddlePoint
 
          function codeAddress(address) {
             geocoder.geocode( { 'address': address}, function(results, status) {
@@ -172,7 +182,7 @@ function initMap() {
               }
             });
           }// end of codeAddress
-       }
+
 
         flightPath.setMap(map);
 
@@ -184,3 +194,30 @@ function initMap() {
 
   calculateAndDisplayRoute(directionsService, directionsDisplay)
 }// end of initMap()
+
+Math.round10 = function(value, exp) {
+      return decimalAdjust('round', value, exp);
+    };
+
+    function decimalAdjust(type, value, exp) {
+        // If the exp is undefined or zero...
+        if (typeof exp === 'undefined' || +exp === 0) {
+          return Math[type](value);
+        }
+        value = +value;
+        exp = +exp;
+        // If the value is not a number or the exp is not an integer...
+        if (value === null || isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+          return NaN;
+        }
+        // If the value is negative...
+        if (value < 0) {
+          return -decimalAdjust(type, -value, exp);
+        }
+        // Shift
+        value = value.toString().split('e');
+        value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+        // Shift back
+        value = value.toString().split('e');
+        return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+      }
