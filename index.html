@@ -7,6 +7,7 @@
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" href="assets/style/style.css">
+
 </head>
 
 <body>
@@ -54,7 +55,9 @@
 											<button type="submit" class="btn btn-default" id="run-search"><i class="fa fa-search"></i> Search</button>
 											<button type="button" class="btn btn-default" id="clear-all"><i class="fa fa-trash"></i> Clear Results</button>
 											<button type="button" class="btn btn-default" id="show-elec"><i class="fa fa-search"></i> Show all Electric Charging Stations on the Route</button>
-											<button type="button" class="btn btn-default" id="show-restaurants"><i class="fa fa-trash"></i> Show Restaurants near Middle Point</button>
+											<button type="button" class="btn btn-default show" id="show-all-restaurants" value="allRestaurants"><i class="fa fa-trash"></i> Show All Restaurants near Middle Point</button>
+											<button type="button" class="btn btn-default show" id="show-hotels" value="lodging"><i class="fa fa-trash"></i> Show Hotels near Middle Point</button>
+											<button type="button" class="btn btn-default" id="show-vegeterian-restaurants" value="vegetarian"><i class="fa fa-trash"></i> Show Vegetarian Restaurants near Middle Point</button>
 										</div>
 									</div>
 								</div>
@@ -66,8 +69,32 @@
 
 	  <!-- GOOGLE MAPS placeholder -->
 		<div class="row">
-			  <div class="col-sm-9" id="map">GOOGLE MAPS placeholder
-
+			  <div class="col-sm-9" id="map"> GOOGLE MAPS placeholder
+					<div style="display: none">
+				      <div id="info-content">
+				        <table>
+				          <tr id="iw-url-row" class="iw_table_row">
+				            <td id="iw-icon" class="iw_table_icon"></td>
+				            <td id="iw-url"></td>
+				          </tr>
+				          <tr id="iw-address-row" class="iw_table_row">
+				            <td class="iw_attribute_name">Address:</td>
+				            <td id="iw-address"></td>
+				          </tr>
+				          <tr id="iw-phone-row" class="iw_table_row">
+				            <td class="iw_attribute_name">Telephone:</td>
+				            <td id="iw-phone"></td>
+				          </tr>
+				          <tr id="iw-rating-row" class="iw_table_row">
+				            <td class="iw_attribute_name">Rating:</td>
+				            <td id="iw-rating"></td>
+				          </tr>
+				          <tr id="iw-website-row" class="iw_table_row">
+				            <td class="iw_attribute_name">Website:</td>
+				            <td id="iw-website"></td>
+				          </tr>
+				        </table>
+				      </div>
 				</div>
 		</div>
 
@@ -124,10 +151,11 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="assets/javascript/app_ajax.js"></script>
 	<script src="assets/javascript/app.js"></script>
+
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>
 
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYNNI9JxV8n4ANUFaIEfrB3abQ4EBESxY&libraries=places,geometry,drawing&callback=initMap"> </script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYNNI9JxV8n4ANUFaIEfrB3abQ4EBESxY&libraries=places,geometry,drawing&&region=US&callback=initMap"> </script>
 
 
 </body>
