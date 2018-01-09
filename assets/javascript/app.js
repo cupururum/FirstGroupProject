@@ -109,7 +109,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, middle) 
 
       var overallDistanceInMiles = response.routes[0].legs[0].distance.text
 
-      $("#overallDistance").text("Overall Distance: " + overallDistanceInMiles)
+      $("#overallDistance").text("Overall distance: " + overallDistanceInMiles)
 
       var overallDistanceInMeters = response.routes[0].legs[0].distance.value
 
@@ -190,7 +190,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, middle) 
                if (status === 'OK') {
                  directionsDisplay.setDirections(response);
 
-                 console.log("response of directionsService with middle poit waypoint: ", response)
+                 console.log("response of directionsService with middle point waypoint: ", response)
 
 
                }
@@ -204,7 +204,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, middle) 
               }, function(response, status) {
                 if (status === 'OK') {
                   var distanceInMilesUntillMiddlePoint = response.routes[0].legs[0].distance.text;
-                  $("#distanceInMilesUntillMiddlePoint").text("Miles untill middle point: " + distanceInMilesUntillMiddlePoint)
+                  $("#distanceInMilesUntillMiddlePoint").text("Distance to midpoint: " + distanceInMilesUntillMiddlePoint)
 
                 }
                });

@@ -16,17 +16,30 @@
 	<div class="container">
 
     <!-- title in that crazy jumbotron -->
-    <div class="jumbotron" style="background-color: #000 ; color: pink;">
-      <h1 class="text-center">MIDDLE OF THE ROAD</h1>
-    </div>
+    <div class="jumbotron">MIDDLE OF THE ROAD</div>
 
-	<!-- LOVER #1 entry form -->
+    <!-- MIDDLE POINT! -->
+    <div id="adress-mid-point"></div>
+
+	<!-- INFO ABOUT ROUTE -->
+	<div class="info-about-route">
+		<span id="overallDistance"></span>
+		<span>&nbsp;&nbsp;</span>
+		<span id="distanceInMilesUntillMiddlePoint"></span>
+	</div>
+
+    <!-- GOOGLE MAPS -->
+	<div class="row">
+		<div class="col-sm-9" id="map">
+		</div>
+	</div>
+
+	<!-- ENTRY FORM -->
     <div class="row">
-        <br>
         <!-- First panel is for handling the search parameters -->
         <div class="panel panel-primary">
           <div class="panel-heading">
-            <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i>Find middle point on the route</strong></h3>
+            <h3 class="panel-title" style="text-align: center"><strong><i class="fa fa-list-alt"></i>FIND THE MIDPOINT ON YOUR ROUTE</strong></h3>
           </div>
           <div class="panel-body">
 
@@ -34,6 +47,98 @@
             <form role="form">
               <!-- Here we create the text box for capturing the search term-->
 		            <div class="container" id="containerForm">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group inputs">
+				                		<label for="current-loc">ORIGIN</label>
+				                		<input type="text" class="form-control" id="origin">
+				              		</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group inputs">
+				                		<label for="current-loc">DESTINATION</label>
+				                		<input type="text" class="form-control" id="destination">
+				              		</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-12">
+									<button type="submit" class="btn btn-default" id="run-search"><i class="fa fa-search"></i>SEARCH</button>
+									<button type="button" class="btn btn-default" id="clear-all"><i class="fa fa-trash"></i>clear results</button>
+									<button type="button" class="btn btn-default" id="show-elec"><i class="fa fa-search"></i>ELECTRIC CHARGING STATIONS</button>
+									<button type="button" class="btn btn-default" id="show-restaurants"><i class="fa fa-trash"></i>RESTAURANTS</button>
+								</div>
+							</div>
+					</div>
+            </form>
+
+          </div>
+        </div>
+    </div>
+
+<!-- WEATHER PANEL -->
+		<div class="row">
+			<div class="col-md-5" >
+					<div class="panel panel-primary" id="panel-weather">
+	          <div class="panel-heading" id="weather_panel_heading">
+	            <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i>CURRENT WEATHER at the MIDPOINT</strong></h3>
+	          </div>
+	          <div class="panel-body" id="weather">
+							<div id="city-temperature">
+								<h3 id="city-temperature-h3">&#x2109;</h3>
+							</div>
+							<div id="weather-icon">
+
+							</div>
+							<div id="city-name">
+								<h3 id="city-name-h3"></h3>
+							</div>
+
+						</div>
+				  </div>
+		   	</div>
+
+	<!-- LIST OF RESTAURANTS, HOTELS, ETC -->
+			<div class="col-md-7 list-restaurants">
+				<div class="panel panel-primary" id="panel-lists">
+	          		
+				<!-- CONNECT TO AJAX FOR INFO -->
+
+				BLAH BLAH BLAH BLAH BLAH
+				BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH
+				BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH
+				</div>
+			</div>
+
+    <!-- good ol' footer -->
+    <div class="row">
+      <div class="col-sm-12">
+        <hr>
+        <h5 class="text-center"><small>Made by Will and Valeriya and Jim</small></h5>
+      </div>
+    </div>
+
+
+    <!-- title in that crazy jumbotron -->
+<!--     <div class="jumbotron" style="background-color: #000 ; color: pink;">
+      <h1 class="text-center">MIDDLE OF THE ROAD</h1>
+    </div>
+ -->
+	<!-- LOVER #1 entry form -->
+<!--     <div class="row">
+        <br>
+ -->        <!-- First panel is for handling the search parameters -->
+<!--         <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i>Find middle point on the route</strong></h3>
+          </div>
+          <div class="panel-body">
+
+ -->            <!-- Here we create an HTML Form for handling the inputs-->
+<!--             <form role="form">
+ -->              <!-- Here we create the text box for capturing the search term-->
+<!-- 		            <div class="container" id="containerForm">
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group inputs">
@@ -49,8 +154,8 @@
 				              </div>
 										</div>
 									</div>
-
-									<div class="row">
+ -->
+<!-- 									<div class="row">
 										<div class="col-md-12">
 											<button type="submit" class="btn btn-default" id="run-search"><i class="fa fa-search"></i> Search</button>
 											<button type="button" class="btn btn-default" id="clear-all"><i class="fa fa-trash"></i> Clear Results</button>
@@ -66,9 +171,9 @@
           </div>
         </div>
     </div>
-
+ -->
 	  <!-- GOOGLE MAPS placeholder -->
-		<div class="row">
+<!-- 		<div class="row">
 			  <div class="col-sm-9" id="map"> GOOGLE MAPS placeholder
 					<div style="display: none">
 				      <div id="info-content">
@@ -96,9 +201,9 @@
 				        </table>
 				      </div>
 				</div>
-		</div>
+		</div> -->
 
-    <br>
+<!--     <br>
 		<div class="row">
 			  <div class="col-md-5" >
 
@@ -119,9 +224,9 @@
 
 						</div>
 				  </div>
-		   </div>
+		   </div> -->
 
-			 <div class="col-md-3 info-about-route">
+<!-- 			 <div class="col-md-3 info-about-route">
 				 <div id="adress-mid-point">
 				 </div>
 				 <div id="overallDistance">
@@ -135,16 +240,9 @@
 				 </div>
 			 </div>
 	  </div>
+ -->
 
 
-
-    <!-- good ol' footer -->
-    <div class="row">
-      <div class="col-sm-12">
-        <hr>
-        <h5 class="text-center"><small>Made by Will and Valeriya and Jim</small></h5>
-      </div>
-    </div>
 
 </div> <!-- closing main container -->
 
