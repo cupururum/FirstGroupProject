@@ -1,30 +1,63 @@
+// function recursion() {
+//   if (entryCount < 5) {
+//
+//      console.log("entryCount++: ", entryCount++)
+//      recursion()
+//
+//   } else {
+//      return
+//   }
+// }
+//
+// recursion()
+
 
 function getVegeterianPlaces(lat, log, geocoder, map) {
-  var veggyURL = "https://www.vegguide.org/search/by-lat-long/" + lat + "," + log + "?unit=mile;distance=60";
+
+  //var entryCount = 0;
+
+  var milesArray = [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+  var veggyURL;
+  var i = 0;
+
+
+function recursionOfJSON() {
+
+  veggyURL = "https://www.vegguide.org/search/by-lat-long/" + lat + "," + log + "?unit=mile;limit=10;distance=" + milesArray[i];
+
   $.getJSON(veggyURL, function(response){
-     console.log("veg API response: ", response)
-     var entries = response.entries;
-     entries.forEach(function(entry){
-       var vegEntryAdress = entry.address1;
-       var vegEntryCity = entry.city;
-       var vegEntryState = entry.region;
-       console.log("veg entry adress", vegEntryAdress, vegEntryCity)
-       var vegFullAdress = vegEntryAdress + vegEntryCity //+ vegEntryState
+      entryCount = response.entry_count;
 
-       if (vegEntryAdress !== undefined) {
-         codeAddress(vegFullAdress, geocoder, map)
-       } else {
-         //ignore!
-       }
+      if (entryCount < 1) {
+        i++
+        recursionOfJSON()
+      } else {
+        console.log("veg API response: ", response)
+        var entries = response.entries;
+        entries.forEach(function(entry){
 
+          var vegEntryAdress = entry.address1;
+          var vegEntryCity = entry.city;
+          var vegEntryState = entry.region;
 
-     })
-  })
-} //getVegeterianPlaces()
+          //var restaurantDescription = entry.text/html;
 
+          console.log("veg entry adress", vegEntryAdress, vegEntryCity)
+          var vegFullAdress = vegEntryAdress + vegEntryCity //+ vegEntryState
 
+          if (vegEntryAdress !== undefined) {
+              codeAddress(vegFullAdress, geocoder, map, entry);
+          } else {
+            //ignore!
+          }
 
-
+        });//end of entries.forEach(function(entry)
+        return
+      }
+   });// end of json
+  }//end of recurtionOfJSON()
+  recursionOfJSON()
+}// end of get veg places function
 
 
 function getWeatheReport(lat, log){

@@ -1,7 +1,7 @@
 
 var locationOfOriginLat;
 var locationOfOriginLng;
-var infowindow;
+//var infowindow;
 var newWaypointLocation
 var directionsService
 var directionsDisplay
@@ -18,6 +18,14 @@ var arrayOfLng =[];
 var arrayOfLatLng = [];
 var positionLat;
 var positionLng;
+var markersForElectStations = [];
+var markersForVeg = [];
+var markersForRest = [];
+var markersForHotels = [];
+var actionForElec = 1;
+var actionForRest = 1;
+var actionForHotels = 1;
+var actionForVegPlaces = 1;
 
 
 
@@ -49,8 +57,14 @@ function initMap() {
 $("#clear-all").on("click", function(){
   document.getElementById('origin').value = "";
   document.getElementById('destination').value = "";
-  initMap();
-
+  clearResults(markersForVeg)
+  clearResults(markersForRest)
+  clearResults(markersForHotels)
+  clearResults(markersForElectStations)
+  actionForElec = 1;
+  actionForRest = 1;
+  actionForHotels = 1;
+  actionForVegPlaces = 1;
 })
 
 
@@ -64,15 +78,48 @@ $("#run-search").on("click", function(event){
 
 });//end of on click search function
 
-$("button.show").on("click", function(){
+$("#show-vegeterian-restaurants").on("click", function(){
+  if (actionForVegPlaces == 1) {
+    getVegeterianPlaces(positionLat, positionLng, geocoder, map)
+    actionForVegPlaces = 2
+  } else {
+    clearResults(markersForVeg)
+    actionForVegPlaces = 1
+  }
+
+});
+
+$("#show-all-restaurants").on("click", function(){
     var value = $(this).attr("value");
     console.log("value: ", value)
-    getPlaces(newWaypointLocation, map, initialiseMapForSearch, value)
-})
+    if (actionForRest == 1) {
+      infowindows(newWaypointLocation, map, initialiseMapForSearch, value);
+      actionForRest = 2;
+    } else {
+      clearResults(markersForRest)
+      actionForRest = 1
+    }
+});
+
+$("#show-hotels").on("click", function(){
+    var value = $(this).attr("value");
+    console.log("value: ", value)
+    if (actionForHotels == 1) {
+      infowindows(newWaypointLocation, map, initialiseMapForSearch, value);
+      actionForHotels = 2;
+    } else {
+      clearResults(markersForHotels)
+      actionForHotels = 1
+    }
+});
 
 $("#show-elec").on("click", function(){
-
-  getElecStation(arrayOfLatLng, map);
+  if (actionForElec == 1) {
+    getElecStation(arrayOfLatLng, map);
+    actionForElec = 2;
+  } else {
+    clearResults(markersForElectStations)
+  }
 })
 
 function initialiseMapForSearch() {
@@ -109,7 +156,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, middle) 
 
       var overallDistanceInMiles = response.routes[0].legs[0].distance.text
 
-      $("#overallDistance").text("Overall distance: " + overallDistanceInMiles)
+      $("#overallDistance").text("Overall Distance: " + overallDistanceInMiles)
 
       var overallDistanceInMeters = response.routes[0].legs[0].distance.value
 
@@ -190,7 +237,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, middle) 
                if (status === 'OK') {
                  directionsDisplay.setDirections(response);
 
-                 console.log("response of directionsService with middle point waypoint: ", response)
+                 console.log("response of directionsService with middle poit waypoint: ", response)
 
 
                }
@@ -204,7 +251,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, middle) 
               }, function(response, status) {
                 if (status === 'OK') {
                   var distanceInMilesUntillMiddlePoint = response.routes[0].legs[0].distance.text;
-                  $("#distanceInMilesUntillMiddlePoint").text("Distance to midpoint: " + distanceInMilesUntillMiddlePoint)
+                  $("#distanceInMilesUntillMiddlePoint").text("Miles untill midpoint: " + distanceInMilesUntillMiddlePoint)
 
                 }
                });
@@ -245,6 +292,24 @@ directionsDisplay.addListener('directions_changed', function() {
 
         newWaypointLocation = response.routes[0].legs[0].end_location
 
+        positionLat = newWaypointLocation.lat()
+        positionLng  = newWaypointLocation.lng()
+
+        console.log("positionLat, positionLng: ", positionLat, positionLng)
+
+        getWeatheReport(positionLat, positionLng)
+
+        clearResults(markersForVeg)
+        clearResults(markersForRest)
+        clearResults(markersForHotels)
+        clearResults(markersForElectStations)
+        actionForElec = 1;
+        actionForRest = 1;
+        actionForHotels = 1;
+        actionForVegPlaces = 1;
+
+
+
         //pinMiddlePoint(newWaypointLocation, geocoder, map, initialiseMapForSearch)
         console.log("newWaypointLocation: ", newWaypointLocation)
 
@@ -264,25 +329,62 @@ function computeTotalDistance(result) {
 
 
 
- function codeAddress(address, geocoder, map) {
-    geocoder.geocode( { 'address': address}, function(results, status) {
-      if (status == 'OK') {
-        //map.setCenter(results[0].geometry.location);
-        console.log("results[0].geometry.location: ", results[0].geometry.location);
+ function codeAddress(address, geocoder, map, entry) {
+   var vegEntryAdress = entry.address1;
+   var vegEntryCity = entry.city;
+   var vegEntryState = entry.region;
+   var restaurantName = entry.name;
+   var restaurantWebSite = entry.website;
+   var restaurantRating = entry.rating_count;
+   var restPhone = entry.phone;
 
-        var marker = new google.maps.Marker({
-         position: results[0].geometry.location,
-         animation: google.maps.Animation.DROP,
-         icon: "assets/images/GoogleMapsMarkers/green_MarkerR.png",
-         map: map
-       });
 
-      } else {
-        //ignore
-        console.log('Geocode was not successful for the following reason: ' + status);
-        //alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });
+   function createContentForInfowindowVeg () {
+     $("#vegRestName").text(restaurantName)
+     $("#vegRestAddr").text(vegEntryAdress + vegEntryCity);
+     $("#vegRestTel").text(restPhone);
+     $("#vegRestR").text(restaurantRating + "/5");
+     $("#vegRestW").text(restaurantWebSite)
+   }
+
+   var infowindow = new google.maps.InfoWindow({
+     content: document.getElementById('veg-content')
+   });
+
+   geocoder.geocode( { 'address': address}, function(results, status) {
+     if (status == 'OK') {
+       //map.setCenter(results[0].geometry.location);
+       console.log("geocoder results for veg rest: ", results);
+
+
+
+       var marker = new google.maps.Marker({
+        position: results[0].geometry.location,
+        animation: google.maps.Animation.DROP,
+        icon: "assets/images/GoogleMapsMarkers/green_MarkerR.png",
+        map: map
+      });
+
+
+     markersForVeg.push(marker)
+
+     } else {
+       //ignore
+       console.log('Geocode was not successful for the following reason: ' + status);
+       //alert('Geocode was not successful for the following reason: ' + status);
+     }
+     // marker.addListener('click', function() {
+     //    infowindow.open(map, marker);
+     //    createContentForInfowindowVeg()
+     //  });
+     //  return marker
+     google.maps.event.addListener(marker, 'click', function() {
+        var marker = this;
+        infowindow.open(map, marker);
+        createContentForInfowindowVeg()
+      });
+     return marker;
+   });
   }// end of codeAddress
 
  function pinMiddlePoint(middle, geocoder, map, initialiseMapForSearch) {
@@ -404,14 +506,19 @@ function computeTotalDistance(result) {
      });
      //console.log("locationsFuleStations: ", locations)
 
-     locations.forEach(function(location){
-       var marker = new google.maps.Marker({
-           position: location,
-           //animation: google.maps.Animation.DROP,
-           icon: "assets/images/GoogleMapsMarkers/purple_MarkerE.png",
-           map: map
-         });
-     })//end forEach
+     function createMarkersForElectStations(){
+       for (var k = 0; k < locations.length; k++) {
+         var marker = new google.maps.Marker({
+             position: locations[k],
+             //animation: google.maps.Animation.DROP,
+             icon: "assets/images/GoogleMapsMarkers/purple_MarkerE.png",
+             map: map
+           });
+           markersForElectStations.push(marker)
+       }
+     }
+
+     createMarkersForElectStations()
    });//end of ajax done
  } // end of getElecStation
 
@@ -528,18 +635,31 @@ function computeTotalDistance(result) {
 
 
    function callback(results, status) {
+     console.log("results: ", results)
      if(status == google.maps.places.PlacesServiceStatus.OK){
        for (var i = 0; i < results.length; i++){
-         var newMarker = createMarker(results[i]);
+         var newMarker = createMarker(results[i], value);
+         console.log("newMarker: ", newMarker)
          newMarker.placeResult = results[i];
-         markers.push(newMarker);
+
+         if (value === "restaurant" ) {
+           markersForRest.push(newMarker);
+         } else if (value === "lodging") {
+           markersForHotels.push(newMarker)
+         } else {
+           //ignore!
+         };
+
+         console.log("markers in infowindow: ", markers)
        }
      }
    }
 
-   function createMarker(place) {
+   function createMarker(place, value) {
 
-     if (value === "allRestaurants" ) {
+     var icon;
+
+     if (value === "restaurant" ) {
        icon = "assets/images/GoogleMapsMarkers/pink_MarkerR.png"
      } else if (value === "lodging") {
        icon = "assets/images/GoogleMapsMarkers/paleblue_MarkerH.png"
@@ -553,7 +673,7 @@ function computeTotalDistance(result) {
      }
      var placeLoc = place.geometry.location;
      var marker = new google.maps.Marker({
-       icom: icon,
+       icon: icon,
        map: map,
        position: place.geometry.location,
        title: place.name,
@@ -567,16 +687,9 @@ function computeTotalDistance(result) {
 
    }
 
-   function clearResults(markers) {
-     for (var m in markers) {
-       markers[m].setMap(null)
-     }
-     markers = []
-     console.log(markers);
-   }
+
 
    function showInfoWindow() {
-     console.log("i am in showInfoWindow()")
      var marker = this;
      var placeDetails = places.getDetails({placeId: marker.placeResult.place_id},
        function(place, status) {
@@ -630,9 +743,17 @@ function computeTotalDistance(result) {
      } else {
        document.getElementById('iw-website-row').style.display = 'none';
      }
-   }
+   } //buildIWContent(place)
 
  } //end of infowindows
+
+ function clearResults(markers) {
+   for (var m in markers) {
+     markers[m].setMap(null)
+   }
+   markers = []
+   console.log(markers);
+ }//enf of function clearMarkers
 
 //google.maps.event.addDomListener(window, 'load', initialize);
 
