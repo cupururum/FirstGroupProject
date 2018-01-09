@@ -28,11 +28,11 @@ function recursionOfJSON() {
   $.getJSON(veggyURL, function(response){
       entryCount = response.entry_count;
 
-      if (entryCount < 1) {
+      if (entryCount < 3) {
         i++
         recursionOfJSON()
       } else {
-        console.log("veg API response: ", response)
+        //console.log("veg API response: ", response)
         var entries = response.entries;
         entries.forEach(function(entry){
 
@@ -42,7 +42,7 @@ function recursionOfJSON() {
 
           //var restaurantDescription = entry.text/html;
 
-          console.log("veg entry adress", vegEntryAdress, vegEntryCity)
+          //console.log("veg entry adress", vegEntryAdress, vegEntryCity)
           var vegFullAdress = vegEntryAdress + vegEntryCity //+ vegEntryState
 
           if (vegEntryAdress !== undefined) {
@@ -61,6 +61,9 @@ function recursionOfJSON() {
 
 
 function getWeatheReport(lat, log){
+
+  $("#panel-weather").css({"visibility": "visible"})
+
   var APIKey = "2fed8f4901a44c1fc8836915c086c9e8";
 
   // Here we are building the URL we need to query the database
@@ -71,7 +74,7 @@ function getWeatheReport(lat, log){
     url: queryURL,
     method: "GET"
   }).done(function(response) {
-     console.log(response)
+     //console.log(response)
 
      var iconCode = response.weather[0].icon;
      var temperature = Math.round(response.main.temp);
