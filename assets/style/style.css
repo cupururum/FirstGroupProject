@@ -1,3 +1,6 @@
+body {
+  background-image: url(../images/backgr.jpg)
+}
 .jumbotron {
   background-color: black;
   color: rgb(6,197,96);
@@ -14,14 +17,21 @@
   border: 0px;
 }
 
+div#alertDiv {
+  background-color: rgba(248,150,112, 0.9);
+  font-size: 20px;
+  color: rgb(250,231,231);
+  margin-bottom: 20px;
+}
+
 #map {
   width: 100%;
   height: 400px;
   margin-bottom: 20px;
 }
 
-div#containerForm.container {
-
+div.panel-heading#headingForFindMP {
+  background-color: rgb(35,144,247);;
 }
 
 div.form-group.inputs {
@@ -31,10 +41,15 @@ div.form-group.inputs {
 
 div.panel.panel-primary#panel-weather {
   text-align: center;
+  background-color: rgba(255,255,255, 0.6);
+  visibility: hidden;
+}
+div.panel.panel-primary#inputPanelBody {
+  background-color: rgba(255,255,255, 0.6)
 }
 
 #weather_panel_heading {
-  background-color: rgb(6,197,96);
+  background-color: rgba(6,197,96, 0.8);
 }
 
 #city-temperature {
@@ -58,6 +73,7 @@ div.panel.panel-primary#panel-weather {
 .info-about-route {
   font-size: 20px;
   text-align: center;
+  background-color: rgba(255,255,255, 0.6)
 }
 
 #city-name-h3 {
@@ -66,17 +82,27 @@ div.panel.panel-primary#panel-weather {
   float: left;
 }
 
-#adress-mid-point {
-  font-size: 35px; 
-  text-align: center; 
+div#adress-mid-point {
+  font-size: 35px;
+  text-align: center;
   color: #357db5;
+  background-color: rgba(255,255,255, 0.6);
 }
 
-.list-restaurants {
 
-}
 
 div.panel.panel-primary#panel-lists {
   margin-top: 0px;
   text-align: left;
+  border-style: none;
+  border: 0px;
+  margin-right: 0px;
+  background-color: rgba(255,255,255, 0.0)
+  /* width: 600px; */
+}
+
+button.btn.btn-info {
+  background-color: rgb(35,144,247);
+  width: 185px;
+  margin-top: 3px;
 }
